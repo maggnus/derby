@@ -1,4 +1,4 @@
-import { RootModel, type Model } from 'racer';
+import { RootModel } from 'racer';
 import tracks = require('tracks');
 
 import { type App } from './App';

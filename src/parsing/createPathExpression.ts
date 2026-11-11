@@ -257,6 +257,6 @@ function reduceSequenceExpression(node: estree.SequenceExpression, afterSegments
   return new expressions.SequenceExpression(args, afterSegments);
 }
 
-function unexpected(node: estree.Node) {
+function unexpected(node: estree.Node): never {
   throw new Error('Unexpected Esprima node: ' + JSON.stringify(node, null, 2));
 }

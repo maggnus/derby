@@ -121,14 +121,14 @@ describe('Parse and render dynamic text and blocks', function() {
     it('brackets in alias', function() {
       var source = '{{with _page.greeting as #greeting[0]}}{{/with}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Alias must not have dots or brackets/);
     });
 
     it('dots in alias', function() {
       var source = '{{with _page.greeting as #greeting.a}}{{/with}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Alias must not have dots or brackets/);
     });
   });
@@ -217,56 +217,56 @@ describe('Parse and render dynamic text and blocks', function() {
     it('no pound sign at start of alias', function() {
       var source = '{{each _page.letters as letter}}{{/each}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Alias must be an identifier starting with "#"/);
     });
 
     it('trailing parenthesis in alias', function() {
       var source = '{{each _page.letters as #letter)}}{{/each}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Unexpected token \)/);
     });
 
     it('brackets in alias', function() {
       var source = '{{each _page.letters as #letter[0]}}{{/each}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Alias must not have dots or brackets/);
     });
 
     it('dots in alias', function() {
       var source = '{{each _page.letters as #letter.a}}{{/each}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Alias must not have dots or brackets/);
     });
 
     it('no pound sign at start of index alias', function() {
       var source = '{{each _page.letters as #letter, index}}{{/each}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Alias must be an identifier starting with "#"/);
     });
 
     it('trailing parenthesis in index alias', function() {
       var source = '{{each _page.letters as #letter, #index)}}{{/each}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Unexpected token \)/);
     });
 
     it('brackets in index alias', function() {
       var source = '{{each _page.letters as #letter, #index[0]}}{{/each}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Alias must not have dots or brackets/);
     });
 
     it('dots in index alias', function() {
       var source = '{{each _page.letters as #letter, #index.a}}{{/each}}';
       expect(function() {
-        var template = parsing.createTemplate(source);
+        parsing.createTemplate(source);
       }).to.throw(/Alias must not have dots or brackets/);
     });
   });

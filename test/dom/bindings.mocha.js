@@ -123,7 +123,7 @@ describe('bindings', function() {
     });
     it('only renders if the expression value changes', function() {
       const app = runner.createHarness().app;
-      const count = 0;
+      let count = 0;
       app.proto.count = function() {
         return count++;
       };

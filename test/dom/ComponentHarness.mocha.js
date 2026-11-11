@@ -252,7 +252,7 @@ describe('ComponentHarness', function() {
       );
       const expectedHtml = 'url: /box?size=123 | query: {"size":"123"}';
 
-      const page = harness.renderHtml({url: renderUrl});
+      let page = harness.renderHtml({url: renderUrl});
       expectPageParams(page, renderUrl, expectedQueryParams);
       expect(page.html).to.equal(expectedHtml);
 
@@ -269,7 +269,7 @@ describe('ComponentHarness', function() {
       const page = harness.renderDom();
       expectPageParams(page, '', {});
 
-      const newUrl = '/box?size=123';
+      let newUrl = '/box?size=123';
       harness.app.history.push(newUrl);
       expectPageParams(page, newUrl, {size: '123'});
       expect(page.fragment).html('url: /box?size=123 | query: {"size":"123"}');

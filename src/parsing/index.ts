@@ -898,6 +898,10 @@ export function parseViews(file: string, namespace: string, filename?: string, o
   const views: ParsedView[] = [];
   const prefix = (namespace) ? namespace + ':' : '';
 
+  // These variables pass state from attributes in the start tag to the
+  // following view template text
+  let name, attrs;
+
   htmlUtil.parse(file + '\n', {
     // Force view tags to be treated as raw tags,
     // meaning their contents are not parsed as HTML
@@ -913,10 +917,6 @@ export function parseViews(file: string, namespace: string, filename?: string, o
     }
     return new RegExp('</' + tagName, 'i');
   }
-
-  // These variables pass state from attributes in the start tag to the
-  // following view template text
-  let name, attrs;
 
   function onStart(tag, tagName, tagAttrs) {
     const lastChar = tagName.charAt(tagName.length - 1);

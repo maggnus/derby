@@ -98,7 +98,7 @@ describe('components', function() {
         const page = app.createPage();
         app.views.register('Body', '<view is="box" as="box"></view>');
         app.views.register('box', '<div></div>');
-        const called = false;
+        let called = false;
         const update = function() {
           expect(this).instanceof(Box);
           called = true;
@@ -123,7 +123,7 @@ describe('components', function() {
         const page = app.createPage();
         app.views.register('Body', '<view is="box" as="box"></view>');
         app.views.register('box', '<div></div>');
-        const called = false;
+        let called = false;
         let box;
         const update = function(cb) {
           expect(this).instanceof(Box);
@@ -156,7 +156,7 @@ describe('components', function() {
         const page = app.createPage();
         app.views.register('Body', '<view is="box" as="box"></view>');
         app.views.register('box', '<div></div>');
-        const called = false;
+        let called = false;
         let box;
         const update = function(letter, number, cb) {
           expect(this).instanceof(Box);
@@ -230,7 +230,7 @@ describe('components', function() {
       const page = app.createPage();
       app.views.register('Body', '<view is="box" as="box"></view>');
       app.views.register('box', '<div></div>');
-      const called = false;
+      let called = false;
       const update = function(cb) {
         expect(cb).a('function');
         if (called) {
@@ -255,8 +255,8 @@ describe('components', function() {
       const page = app.createPage();
       app.views.register('Body', '<view is="box" as="box"></view>');
       app.views.register('box', '<div></div>');
-      const calls = 0;
-      const intervalCount = 0;
+      let calls = 0;
+      let intervalCount = 0;
       let interval;
       const update = function(cb) {
         if (calls === 0) {
@@ -295,8 +295,8 @@ describe('components', function() {
       const delay = 10;
       // prevent flaky test -- occasionally called 1ms too fast
       const minAllowedDelay = delay - 1;
-      const calls = 0;
-      const tickCount = 0;
+      let calls = 0;
+      let tickCount = 0;
       let timeout;
       let previous;
       const update = function() {

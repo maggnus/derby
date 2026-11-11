@@ -63,7 +63,6 @@ export interface AppOptions {
 
 type OnRouteCallback = (this: Page, page: Page, model: Model, params: PageParams, done?: () => void) => void;
 
-type Routes = [string, string, any][];
 
 
 /*
@@ -89,7 +88,7 @@ export abstract class App extends EventEmitter {
   Page: typeof Page;
   proto: any;
   views: Views;
-  tracksRoutes: Routes;
+  tracksRoutes: ReturnType<typeof routes>;
   model: RootModel;
   page: Page;
   protected _pendingComponentMap: Record<string, ComponentConstructor | SingletonComponentConstructor>;
@@ -117,6 +116,7 @@ export abstract class App extends EventEmitter {
   }
 
   abstract _init(options?: AppOptions);
+  abstract createPage(req?: unknown, res?: unknown, next?: (err?: unknown) => void): Page;
   loadViews(_viewFilename, _viewName?) { }
   loadStyles(_filename, _options?) { }
 
@@ -266,7 +266,7 @@ export abstract class App extends EventEmitter {
 }
 
 export class AppForClient extends App {
-  page: PageForClient;
+  declare page: PageForClient;
   history: {
     push: (url: string, render?: boolean, state?: object, e?: any) => void,
     replace: (url: string, render?: boolean, state?: object, e?: any) => void,
@@ -396,7 +396,7 @@ export class AppForClient extends App {
         // http://javascript.nwbox.com/IEContentLoaded/
         // @ts-expect-error IE only api check
         document.documentElement.doScroll('left');
-      } catch (err) {
+      } catch {
         setTimeout(doScrollCheck, 0);
         return;
       }
@@ -428,7 +428,7 @@ export class AppForClient extends App {
       let toplevel;
       try {
         toplevel = window.frameElement == null;
-      } catch (err) { /* ignore, not IE */ }
+      } catch { /* ignore, not IE */ }
       // @ts-expect-error IE api
       if (document.documentElement.doScroll && toplevel) {
         doScrollCheck();
@@ -488,8 +488,7 @@ export class AppForClient extends App {
 
     } else if (action === 'reload') {
       this.model.whenNothingPending(function() {
-        const { location } = window;
-        window.location = location;
+        window.location.reload();
       });
     }
   }
@@ -506,7 +505,7 @@ export class AppForClient extends App {
           Math.min(0, p - 30),
           Math.max(p + 30, jsonString.length - 1)
         );
-        throw new Error('Parse failure: ' + error.message + ' context: \'' + stringContext + '\'');
+        throw new Error('Parse failure: ' + error.message + ' context: \'' + stringContext + '\'', { cause: error });
       }
       throw error;
     }

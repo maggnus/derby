@@ -14,7 +14,7 @@ declare module 'racer' {
 export class PageForServer extends Page {
   req: Request;
   res: Response;
-  page: PageForServer;
+  declare page: PageForServer;
 
   constructor(app: AppForServer, model: Model, req: Request, res: Response) {
     super(app, model);

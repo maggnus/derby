@@ -278,7 +278,7 @@ function testStaticRendering(test) {
       ]),
       html: '<table><tbody><tr><td>Hi</td></tr></tbody></table>',
       fragment: function(fragment) {
-        const node = fragment.firstChild;
+        let node = fragment.firstChild;
         expect(node.tagName.toLowerCase()).equal('table');
         node = node.firstChild;
         expect(node.tagName.toLowerCase()).equal('tbody');
@@ -1173,7 +1173,7 @@ function removeChildren(node) {
 function getChildren(node) {
   const nodeChildren = node.children;
   const children = [];
-  for (const i = 0, len = nodeChildren.length; i < len; i++) {
+  for (let i = 0, len = nodeChildren.length; i < len; i++) {
     const child = nodeChildren[i];
     if (child.nodeType === 1) children.push(child);
   }
@@ -1261,7 +1261,7 @@ FakeContext.prototype.eachChild = function(expression, index) {
   return new FakeContext(this.meta, data, this);
 };
 FakeContext.prototype._get = function(property) {
-  return (this.data && this.data.hasOwnProperty(property)) ?
+  return (this.data && Object.hasOwn(this.data, property)) ?
     this.data[property] :
     this.parent && this.parent._get(property);
 };
@@ -1277,7 +1277,7 @@ FakeContext.prototype.flush = function() {
   const len = pending.length;
   if (!len) return;
   this.meta.pending = [];
-  for (const i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) {
     pending[i]();
   }
 };

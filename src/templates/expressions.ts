@@ -236,7 +236,7 @@ export class LiteralExpression extends Expression {
 
 export class PathExpression extends Expression {
   type = 'PathExpression';
-  segments: Segment[];
+  declare segments: Segment[];
 
   constructor(segments: Segment[], meta?: ExpressionMeta) {
     super(meta);

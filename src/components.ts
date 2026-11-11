@@ -7,9 +7,11 @@
  *
  */
 
+import { EventEmitter } from 'events';
+
 import { type ChildModel, util } from 'racer';
 
-import { Controller } from './Controller';
+import { Controller, initController } from './Controller';
 import { Page } from './Page';
 import derbyTemplates = require('./templates');
 import { Context } from './templates/contexts';
@@ -56,7 +58,7 @@ export abstract class Component<T extends object = object> extends Controller<T>
    * Whether the component instance is fully destroyed. Initially set to false.
    */
   isDestroyed: boolean;
-  page: Page;
+  declare page: Page;
   /**
    * Reference to the containing controller
    */
@@ -69,27 +71,10 @@ export abstract class Component<T extends object = object> extends Controller<T>
 
   constructor(context: Context, data: Record<string, unknown>) {
     const parent = context.controller;
-    const id = context.id();
-    const scope = ['$components', id];
-    const model = parent.model.root.eventContext(id) as ChildModel<T>;
-    model._at = scope.join('.');
-    data.id = id;
-    model._set(scope, data);
-    // Store a reference to the component's scope such that the expression
-    // getters are relative to the component
-    model.data = data as T;
+    const model = createComponentModel<T>(context, data);
     // IMPORTANT: call super _after_ model created
-    super(context.controller.app, context.controller.page, model);
-
-    this.parent = parent;
-    this.context = context.componentChild(this);
-    this.id = id;
-    this._scope = scope;
-
-    // Add reference to this component on the page so that all components
-    // associated with a page can be destroyed when the page transitions
-    this.page._components[id] = this;
-    this.isDestroyed = false;
+    super(parent.app, parent.page, model);
+    initComponent(this, context, parent, model);
   }
 
   /**
@@ -428,8 +413,8 @@ export class ComponentAttribute {
 }
 
 export class ComponentAttributeBinding extends Binding {
-  template: any;
-  context: Context;
+  declare template: any;
+  declare context: Context;
   condition: any;
 
   constructor(expression: Expression, model: any, key: any, context: Context) {
@@ -507,6 +492,49 @@ function emitInitHooks(context, component) {
   }
 }
 
+/**
+ * Creates the model of a component in the scope of its containing controller.
+ * This has to happen before the controller of the component is initialized.
+ */
+function createComponentModel<T extends object>(context: Context, data: Record<string, unknown>) {
+  const id = context.id();
+  const scope = ['$components', id];
+  const model = context.controller.model.root.eventContext(id) as ChildModel<T>;
+  model._at = scope.join('.');
+  data.id = id;
+  model._set(scope, data);
+  // Store a reference to the component's scope such that the expression
+  // getters are relative to the component
+  model.data = data as T;
+  return model;
+}
+
+/** Sets the properties that are specific to components, after the controller is initialized. */
+function initComponent(component: Component, context: Context, parent: Controller, model: ChildModel) {
+  const id = (model.data as ComponentModelData).id;
+  component.parent = parent;
+  component.context = context.componentChild(component);
+  component.id = id;
+  component._scope = ['$components', id];
+
+  // Add reference to this component on the page so that all components
+  // associated with a page can be destroyed when the page transitions
+  component.page._components[id] = component;
+  component.isDestroyed = false;
+}
+
+/**
+ * Initializes a component whose constructor does not extend the Component
+ * class and so has not run the Component constructor.
+ */
+function initLegacyComponent(component: Component, context: Context, data: Record<string, unknown>) {
+  const parent = context.controller;
+  const model = createComponentModel(context, data);
+  EventEmitter.call(component);
+  initController(component, parent.app, parent.page, model);
+  initComponent(component, context, parent, model);
+}
+
 export class ComponentModelData {
   id: string;
   $controller: Controller;
@@ -525,12 +553,12 @@ export class ComponentFactory {
   init(context: Context) {
     const DataConstructor = this.constructorFn.DataConstructor || ComponentModelData;
     const data = new DataConstructor();
-    // eslint-disable-next-line new-cap
+     
     const component = new this.constructorFn(context, data);
     // Detect whether the component constructor already called super by checking
     // for one of the properties it sets. If not, call the Component constructor
     if (!component.context) {
-      Component.call(component, context, data);
+      initLegacyComponent(component, context, data);
     }
     setModelAttributes(component.context, component.model);
     // Do the user-specific initialization. The component constructor should be
@@ -583,7 +611,7 @@ class SingletonComponentFactory {
   }
 
   init(context) {
-    // eslint-disable-next-line new-cap
+     
     if (!this.component) this.component = new this.constructorFn() as Component;
     return context.componentChild(this.component);
   }
@@ -599,7 +627,7 @@ function isBasePrototype(object) {
 }
 
 function getRootPrototype(object) {
-  // eslint-disable-next-line no-constant-condition
+   
   while (true) {
     const prototype = Object.getPrototypeOf(object);
     if (isBasePrototype(prototype)) return object;

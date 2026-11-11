@@ -23,7 +23,7 @@ const {
 } = derbyTemplates;
 
 export abstract class Page extends Controller {
-  model: RootModel;
+  declare model: RootModel;
   params: Readonly<PageParams>;
   context: Context;
   create: (model: Model, dom: any) => void;
@@ -31,7 +31,7 @@ export abstract class Page extends Controller {
   _components: Record<string, components.Component>
   _eventModel: any;
   _removeModelListeners: () => void = () => {};
-  page: Page;
+  declare page: Page;
 
   constructor(app: App, model: Model) {
     super(app, null, model);

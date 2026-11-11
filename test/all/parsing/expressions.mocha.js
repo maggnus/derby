@@ -355,9 +355,9 @@ describe('Expression::get', function() {
   it('gets expressions modified by a unary operator', function() {
     var expression = create('!_page.first');
     expect(expression.get(context)).to.equal(false);
-    var expression = create('!!_page.colors[_page.key].name');
+    expression = create('!!_page.colors[_page.key].name');
     expect(expression.get(context)).to.equal(true);
-    var expression = create('typeof greeting()');
+    expression = create('typeof greeting()');
     expect(expression.get(context)).to.equal('string');
   });
 

@@ -260,8 +260,8 @@ export class Text extends Template {
 // The update method must take care to switch between these types of bindings
 // in case the expression return type changes dynamically.
 export class DynamicText extends Template {
-  expression: Expression;
-  unbound: boolean;
+  declare expression: Expression;
+  declare unbound: boolean;
 
   constructor(expression: Expression) {
     super();
@@ -387,7 +387,7 @@ function attachText(parent: Node, node: Node, data: string, template: Template, 
 
 export class Comment extends Template {
   data: string;
-  hooks: MarkupHook<any>[];
+  declare hooks: MarkupHook<any>[];
   type = 'Comment';
 
   constructor(data: string, hooks?: MarkupHook<any>[]) {
@@ -418,8 +418,8 @@ export class Comment extends Template {
 }
 
 export class DynamicComment extends Template {
-  expression: Expression;
-  hooks: MarkupHook<any>[];
+  declare expression: Expression;
+  declare hooks: MarkupHook<any>[];
   type = 'DynamicComment';
 
   constructor(expression: Expression, hooks: MarkupHook<any>[]) {
@@ -627,7 +627,7 @@ export class Attribute extends Template {
 }
 
 export class DynamicAttribute extends Attribute {
-  expression: Expression;
+  declare expression: Expression;
   elementNs: string;
   type = 'DynamicAttribute';
 
@@ -710,7 +710,7 @@ function getUnescapedValue(expression: Expression, context: Context) {
 abstract class BaseElement<T> extends Template {
   attributes: Attributes;
   bindContentToValue: boolean;
-  hooks: MarkupHook<any>[];
+  declare hooks: MarkupHook<any>[];
   notClosed: boolean;
   ns: string;
   selfClosing: boolean;
@@ -861,8 +861,8 @@ export class Element extends BaseElement<string> {
 
 export class DynamicElement extends BaseElement<Expression> {
   type = 'DynamicElement';
-  content: Template[];
-  attributes: Attributes;
+  declare content: Template[];
+  declare attributes: Attributes;
 
   constructor(tagName: Expression, attributes: Attributes, content: Template[], hooks: any, selfClosing: boolean, notClosed: any, ns: any) {
     super(attributes, content, hooks, selfClosing, notClosed, ns);
@@ -913,7 +913,7 @@ abstract class BaseBlock extends Template {
 
 export class Block extends BaseBlock {
   type = 'Block';
-  expression: Expression;
+  declare expression: Expression;
 
   constructor(expression: Expression, content: Template[]) {
     super();
@@ -1639,7 +1639,7 @@ let normalizeLineBreaks = (value: string) => value;
     // TextNodes are not expando in IE <=8
     // @ts-expect-error $try does not exist on Text
     document.createTextNode('').$try = 0;
-  } catch (err) {
+  } catch {
     setNodeProperty = function(node, key, value) {
       // If trying to set a property on a TextNode, create a proxy CommentNode
       // and set the property on that node instead. Put the proxy after the
@@ -1789,6 +1789,14 @@ export class View extends Template {
 
   constructor(views: any, name: string, source: string, options: ViewOptions) {
     super();
+    this._init(views, name, source, options);
+  }
+
+  /**
+   * Sets the state of the view. Also used to reset an existing view, so that
+   * references to it stay valid when a view is registered again.
+   */
+  _init(views: any, name: string, source: string, options: ViewOptions) {
     this.views = views;
     this.name = name;
     this.source = source;
@@ -1922,7 +1930,7 @@ export class View extends Template {
 
 abstract class BaseViewInstance extends Template {
   attributes: any;
-  hooks: any;
+  declare hooks: any;
   initHooks: any;
 
   get(context: Context, unescaped: boolean) {
@@ -2170,7 +2178,7 @@ export class Views {
       // instead of creating a new view object so that references to object
       // can be cached after finding the first time
       const componentFactory = view.componentFactory;
-      View.call(view, this, name, source, options);
+      view._init(this, name, source, options);
       view.componentFactory = componentFactory;
     } else {
       view = new View(this, name, source, options);
@@ -2245,7 +2253,7 @@ export class Views {
 
 export class ElementOn extends MarkupHook<globalThis.Element> {
   type = 'ElementOn';
-  name: string;
+  declare name: string;
   expression: any;
 
   constructor(name: string, expression: any) {
@@ -2290,7 +2298,7 @@ export class ElementOn extends MarkupHook<globalThis.Element> {
 
 export class ComponentOn extends MarkupHook<any> {
   type = 'ComponentOn';
-  name: string;
+  declare name: string;
   expression: any;
 
   constructor(name: string, expression: any) {

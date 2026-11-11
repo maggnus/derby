@@ -225,7 +225,6 @@ export class DomListener<K extends keyof EventMap>{
 export class DestroyListener extends DomListener<'destroy'> {
   constructor(target: EventTarget, listener: ListenerFn<'destroy'>) {
     super('destroy', target, listener);
-    DomListener.call(this, 'destroy', target, listener);
   }
 
   add() {

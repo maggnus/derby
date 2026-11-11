@@ -35,7 +35,7 @@ const derby = new DerbyForClient();
 export class AppForHarness extends AppForClient {
   _harness: any;
   _pages: PageForHarness[];
-  page: PageForHarness;
+  declare page: PageForHarness;
   Page = PageForHarness;
 
   constructor(harness) {

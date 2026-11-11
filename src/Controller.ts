@@ -19,11 +19,7 @@ export class Controller<T = DefualtType> extends EventEmitter {
 
   constructor(app: App, page: Page, model: ChildModel<T>) {
     super();
-    this.dom = new Dom(this);
-    this.app = app;
-    this.model = model;
-    this.page = page;
-    (model.data as ComponentModelData).$controller = this;
+    initController(this, app, page, model);
   }
 
   emitCancellable(...args: unknown[]) {
@@ -55,4 +51,17 @@ export class Controller<T = DefualtType> extends EventEmitter {
 
     return delayed;
   }
+}
+
+/**
+ * Sets the properties of a controller. This is the body of the Controller
+ * constructor, so that components that do not extend the Component class can
+ * be initialized as well.
+ */
+export function initController<T>(controller: Controller<T>, app: App, page: Page, model: ChildModel<T>) {
+  controller.dom = new Dom(controller);
+  controller.app = app;
+  controller.model = model;
+  controller.page = page;
+  (model.data as ComponentModelData).$controller = controller;
 }

@@ -1,9 +1,9 @@
+/// <reference types="chai" />
+
 import { ComponentHarness } from './ComponentHarness';
 
-import 'chai';
-
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace, @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   export namespace Chai {
     interface Assertion {
       html(expectedText: string | undefined, options): void;

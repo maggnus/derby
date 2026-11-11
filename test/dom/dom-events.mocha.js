@@ -59,7 +59,7 @@ describe('DOM events', function() {
     );
     const page = app.createPage();
     const fragment = page.getFragment('Body');
-    const destroyed = false;
+    let destroyed = false;
     page.dom.on('destroy', page.span, function() {
       destroyed = true;
     });

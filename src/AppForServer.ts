@@ -371,7 +371,7 @@ export class AppForServer extends App {
   }
 
   middleware(backend) {
-    return [backend.modelMiddware(), this.router()];
+    return [backend.modelMiddleware(), this.router()];
   }
 
   initAutoRefresh(backend) {
