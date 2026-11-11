@@ -2,31 +2,40 @@ name: Test
 
 on:
   push:
-    branches:
-      - master
-      - derby-2
   pull_request:
-    branches:
-      - master
-      - derby-2
 
 jobs:
   test:
-    name: Node ${{ matrix.node }}
+    name: Node.js ${{ matrix.node }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node:
-          - 18
-          - 20
-          - 22
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24, 26]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v7
+        with:
+          path: derby
+      # Racer and Tracks are installed from the folders next to Derby until they are published
+      - uses: actions/checkout@v7
+        with:
+          repository: maggnus/tracks
+          ref: modernize
+          path: tracks
+      - uses: actions/checkout@v7
+        with:
+          repository: maggnus/racer
+          ref: modernize
+          path: racer
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
-      - name: Install
-        run: npm install
-      - name: Test
-        run: npm run checks
+      - run: npm install
+        working-directory: tracks
+      - run: npm install
+        working-directory: racer
+      - run: npm install
+        working-directory: derby
+      - run: npm run checks
+        working-directory: derby

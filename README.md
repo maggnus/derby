@@ -1,5 +1,3 @@
-![Test](https://github.com/derbyjs/derby/workflows/Test/badge.svg)
-
 # Derby
 
 The Derby MVC framework makes it easy to write realtime, collaborative applications that run in both Node.js and browsers.
@@ -14,20 +12,16 @@ Main site: **https://derbyjs.com/**
 
 Examples here: **https://github.com/derbyjs/derby-examples**
 
-## Running Tests
+## Development
 
-Run unit tests:
+Derby needs Node.js 22 or newer. While the forks of Racer and Tracks are not published, they are installed from the folders next to this repository (`../racer` and `../tracks`), and they have to be built first.
 
-```
-npm test
-```
-
-Run browser tests:
-
-> This will prompt to open a browser to run front-end tests
-
-```
-npm run test-browser
+```sh
+npm install
+npm test         # unit tests of the templates, parsing, components and server
+npm run lint
+npm run build    # compiles src/ to dist/
+npm run docs     # generates the API documentation
 ```
 
 ## Getting in touch
@@ -36,24 +30,6 @@ Create an [issue](https://github.com/derbyjs/derby/issues) or reach out to the d
 
 Further resources: **https://derbyjs.com/resources**
 
-## MIT License
+## License
 
-Copyright (c) 2011-2021 by Nate Smith
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+MIT, see [LICENSE](LICENSE).

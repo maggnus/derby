@@ -1,5 +1,16 @@
 # Derby change history
 
+## Unreleased
+
+Changes from derby 4.2.3:
+
+- Requires Node.js 22 or newer. The code is compiled for ES2022 instead of ES5.
+- Routing uses the rewritten Tracks, without the vendored Express router.
+- Fix `app.middleware(backend)`, which called the misspelled `backend.modelMiddware()`.
+- Components that do not extend the `Component` class are initialized without calling the class as a function, which native classes do not allow.
+- Fix the use of variables before their declaration while parsing views, and the reassignment of constants in tests. Both were hidden by the ES5 output.
+- Tests run with Mocha 12 and `tsx`, and ESLint uses the flat config with typescript-eslint. Browserify and the manual browser test page are gone.
+
 Racer provides the model and data synchronization for Derby. It's versions are updated along with Derby versions. See change history for Racer as well:
 https://github.com/derbyjs/racer/blob/master/History.md
 
